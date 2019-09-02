@@ -3,11 +3,14 @@ const Book = require('../models/book');
 module.exports = {
     async readAll(req, res) {
         try {
+            const perPage = 10;
+            const actualPage = req.query.page || 1;
             const query = {};
             if (req.query.name) query.name = req.query.name;
             if (req.query.isbn) query.isbn = req.query.isbn;
 
-            const books = await Book.find(query);
+            const books = await Book.find(query).skip((perPage * actualPage) - perPage)
+                .limit(perPage);
             return res.json(books);
         } catch (err) {
             console.error(err);

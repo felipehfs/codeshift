@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon",
+    "pre-commit": "npm run lint",
+    "lint": "eslint index.js",
     "test": "jest"
   },
   "keywords": [],
@@ -22,6 +24,8 @@
     "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
+    "eslint": "^6.3.0",
+    "husky": "^3.0.5",
     "jest": "^24.9.0",
     "nodemon": "^1.19.1",
     "supertest": "^4.0.2"
