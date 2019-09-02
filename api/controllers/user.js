@@ -21,7 +21,7 @@ module.exports = {
             return res.status(201).json(user);
         } catch (err) {
             console.error(err);
-            return res.status(500).json({ errors: [err] });
+            return res.status(500).json({ errors: ["Um erro ocorreu no sistema"] });
         }
     },
     async login(req, res) {
@@ -49,7 +49,7 @@ module.exports = {
             });
         } catch(err) {
             console.error(err);
-            return res.status(500).json({ errors: [err] });
+            return res.status(500).json({ errors: ["Um erro ocorreu no sistema"] });
         }
     }
 }

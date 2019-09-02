@@ -11,6 +11,7 @@ router.get('/api/books', passport.authenticate('jwt', { session: false }), bookH
 router.get('/api/books/:id', passport.authenticate('jwt', { session: false }), bookHandler.details);
 router.put('/api/books/:id', passport.authenticate('jwt', { session: false }), bookHandler.update);
 router.delete('/api/books/:id', passport.authenticate('jwt', { session: false }), bookHandler.remove);
+router.post('/api/books/:id/upload', passport.authenticate('jwt', { session: false }), bookHandler.uploadImage);
 
 router.post('/api/register', userHandler.register);
 router.post('/api/login', userHandler.login);

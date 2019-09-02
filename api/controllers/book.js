@@ -11,7 +11,7 @@ module.exports = {
             return res.json(books);
         } catch (err) {
             console.error(err);
-            return res.status(500).json({ errors: [err] });
+            return res.status(500).json({ errors: ["Um erro ocorreu no sistema"] });
         }
     },
     async details(req, res) {
@@ -60,7 +60,33 @@ module.exports = {
             return res.json(book);
         } catch (err) {
             console.error(err);
-            return res.status(500).json({ errors: [err] });
+            return res.status(500).json({ errors: ["Um erro ocorreu no sistema"] });
+        }
+    },
+    async uploadImage(req, res) {
+        if (req.files) {
+
+            const file = req.files.image,
+                filename = file.name;
+
+            file.mv("/tmp/" + filename, function(err) {
+                if (err) {
+                    console.error(err);
+                    return res.status(500).json({ errors: ["Um erro ocorreu no upload do arquivo"]});
+                }
+                Book.findByIdAndUpdate(req.params.id, {
+                    $set: {
+                        image: filename
+                    }
+                })
+                .then(() => console.log("updated book"))
+                .catch(err => {
+                    console.error(err);
+                    return res.status(500).json({ errors: ["Um erro ocorreu no upload do arquivo"]});
+                })
+            });
+
+            return res.status(204).send();
         }
     }
 }

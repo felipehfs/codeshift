@@ -4,10 +4,12 @@ const app = express();
 const { MONGO_URL } = require('./database');
 const bodyParser = require("body-parser");
 const passport = require("passport");
+const upload = require("express-fileupload");
 
 const routes = require('../routes');
 const jwtauth = require('./passport');
 
+app.use(upload());
 app.use(passport.initialize()); 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
