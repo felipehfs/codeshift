@@ -17,36 +17,6 @@ async function createBook() {
   return creationRequest;
 }
 
-describe('users', () => {
-  const userExample = {
-    email: "felipe@gmail.com",
-    password: "12345678",
-    username: "felipe"
-  };  
-
-  test("should register the user", async () => {
-    const response = await supertest(app)
-      .post(`/api/register`)
-      .send(userExample);
-    expect(response.statusCode).toBe(201);
-  });
-
-  test("should login the user", async () => {
-    const { email, password} = userExample;
-    const response = await supertest(app).post("/api/login")
-      .send({ email, password });
-    token = response.body.token;
-    expect(response.statusCode).toBe(200);
-  });
-
-  test('should return 404 for email not found', async() => {
-    const response = await supertest(app).post("/api/login")
-      .send({ email: 'notfound@gmail.com', password: '123456' });
-    expect(response.statusCode).toBe(404);
-  });
-
-})
-
 describe("Books", () => {
 
   beforeAll(async () => {
@@ -133,11 +103,8 @@ describe("Books", () => {
     
     expect(response.statusCode).toBe(204);
   })
+});
 
-  afterAll(async () => {
-    const collections = await mongoose.connection.db.collections();
-    for (let collection of collections) {
-      await collection.remove();
-    }
-  });
+afterAll(async () => {
+  await mongoose.connection.db.dropDatabase();
 });
