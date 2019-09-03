@@ -31,7 +31,6 @@ describe('users', () => {
     expect(response.statusCode).toBe(201);
   });
 
-
   test("should login the user", async () => {
     const { email, password} = userExample;
     const response = await supertest(app).post("/api/login")
@@ -39,6 +38,13 @@ describe('users', () => {
     token = response.body.token;
     expect(response.statusCode).toBe(200);
   });
+
+  test('should return 404 for email not found', async() => {
+    const response = await supertest(app).post("/api/login")
+      .send({ email: 'notfound@gmail.com', password: '123456' });
+    expect(response.statusCode).toBe(404);
+  });
+
 })
 
 describe("Books", () => {
@@ -117,6 +123,16 @@ describe("Books", () => {
     const response = await supertest(app).put(`/api/books/${newBook._id}`);
     expect(response.statusCode).toBe(401);
   });
+
+  test('should upload a book cover', async () => {
+    const { body: newBook } = await createBook();
+
+    const response = await supertest(app).post(`/api/books/${newBook._id}/upload`)
+      .set('Authorization', `Bearer ${token}`)
+      .attach('image', __dirname + '/assets/azulejo.jpg');
+    
+    expect(response.statusCode).toBe(204);
+  })
 
   afterAll(async () => {
     const collections = await mongoose.connection.db.collections();
