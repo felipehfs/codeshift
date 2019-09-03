@@ -17,26 +17,47 @@ async function createBook() {
   return creationRequest;
 }
 
-describe("App", () => {
+describe('users', () => {
+  const userExample = {
+    email: "felipe@gmail.com",
+    password: "12345678",
+    username: "felipe"
+  };  
+
   test("should register the user", async () => {
     const response = await supertest(app)
       .post(`/api/register`)
-      .send({
-        email: "felipe@gmail.com",
-        password: "12345678",
-        username: "felipe"
-      });
+      .send(userExample);
     expect(response.statusCode).toBe(201);
   });
 
+
   test("should login the user", async () => {
-    const response = await supertest(app)
-      .post("/api/login")
-      .send({ email: "felipe@gmail.com", password: "12345678" });
+    const { email, password} = userExample;
+    const response = await supertest(app).post("/api/login")
+      .send({ email, password });
     token = response.body.token;
     expect(response.statusCode).toBe(200);
   });
+})
 
+describe("Books", () => {
+
+  beforeAll(async () => {
+    const user = {
+      email: "admin@gmail.com",
+      password: "12345678",
+      username: "admin"
+    };
+
+    await supertest(app).post(`/api/register`).send(user);
+
+    const { email, password} = user;
+    const result = await supertest(app).post("/api/login").send({ email, password });
+    token = result.body.token;
+  });
+
+  // User mock for register and login tests
   test("only authorizated user can see books", async () => {
     const response = await supertest(app).get("/api/books");
     expect(response.statusCode).toBe(401);
