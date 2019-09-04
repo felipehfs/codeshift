@@ -63,5 +63,25 @@ module.exports = {
       console.error(err);
       return res.status(500).json({ errors: ["Um erro ocorreu no sistema"] });
     }
+  },
+  async passwordReset(req, res) {
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        return res.status(404).json({ errors: ["The email not found"]});
+      }
+
+      const hasPasswordEqual = await bcrypt.compare(req.body.newPassword, user.password);
+      if (hasPasswordEqual) {
+        return res.status(400).json({ errors: ["The new password is the same"]});
+      }
+
+      user.password = await bcrypt.hash(req.body.newPassword, 10);
+      await user.save();
+      return res.status(204).send();
+    } catch(err){
+      console.error(err);
+      return res.status(500).json({ errors: ["Um erro ocorreu no sistema"] });
+    }
   }
 };

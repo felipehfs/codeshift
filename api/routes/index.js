@@ -39,5 +39,6 @@ router.post(
 
 router.post("/api/register", userHandler.register);
 router.post("/api/login", userHandler.login);
+router.post("/api/users/reset", userHandler.passwordReset);
 
 module.exports = router;
