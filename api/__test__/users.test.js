@@ -22,6 +22,22 @@ describe('users', () => {
       token = response.body.token;
       expect(response.statusCode).toBe(200);
     });
+
+     test("should reset the password", async () => {
+      const user = { 
+        email: 'evandro@gmail.com', 
+        password: '123456789', 
+        username: 'evandro'
+      };
+      await supertest(app).post('/api/register').send(user);
+      const response = await supertest(app)
+        .post(`/api/users/reset`).send({
+          email: user.email,
+          oldPassword: user.password,
+          newPassword: '12233334444'
+        });
+      expect(response.statusCode).toBe(204);
+    }) 
   
     test('should return 404 for email not found', async() => {
       const response = await supertest(app).post("/api/login")
