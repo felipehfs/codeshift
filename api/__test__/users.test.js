@@ -29,4 +29,19 @@ describe('users', () => {
       expect(response.statusCode).toBe(404);
     });
   
+    test("should email be unique", async () => {
+      const userCredentials = {
+        email: 'felipehfsouza@gmail.com',
+        username: 'felipehfs',
+        password: '12345678'
+      };
+
+      await supertest(app).post("/api/register")
+        .send(userCredentials);
+      
+      const response = await supertest(app).post('/api/register')
+        .send(userCredentials);
+
+      expect(response.statusCode).toBe(400);
+    });
   })
